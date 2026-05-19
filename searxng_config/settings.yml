@@ -5,6 +5,7 @@ server:
   bind_address: "0.0.0.0"
   secret_key: "super_secret_key_123"
 
-formats:
-  - html
-  - json
+search:
+  formats:
+    - html
+    - json
