@@ -25,7 +25,8 @@ async def search(query: str, limit: int = 10):
                     "q": query,
                     "format": "json",
                     "limit": limit
-                }
+                },
+                headers={"X-Forwarded-For": "127.0.0.1"}
             )
             
             if response.status_code != 200:
@@ -49,7 +50,8 @@ async def simple_search(query: str):
                 params={
                     "q": query,
                     "format": "json"
-                }
+                },
+                headers={"X-Forwarded-For": "127.0.0.1"}
             )
             
             if response.status_code != 200:
