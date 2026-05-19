@@ -1,1 +1,9 @@
-.aider*
+__pycache__/
+*.env
+venv/
+env/
+virtualenv/
+.venv/
+.pytest_cache/
+.coverage
+.DS_Store

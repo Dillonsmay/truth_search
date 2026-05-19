@@ -1,30 +1,29 @@
-# Search API with SearXNG Integration
+# TRUTH_SEARCH
 
-This project provides a FastAPI application that integrates with SearXNG to provide search functionality.
+A privacy-respecting, AI-augmented metasearch engine that delivers verified information through a local Retrieval-Augmented Generation (RAG) pipeline.
 
-## Features
+## Overview
 
-- RESTful API endpoints for searching
-- Integration with SearXNG for powerful search capabilities
-- Dockerized setup for easy deployment
+TRUTH_SEARCH is a sophisticated search platform designed to provide users with accurate, locally-processed information while maintaining strict privacy standards. Built upon a robust architecture that integrates SearXNG for powerful metasearching capabilities and local LLM integration via LM Studio, this system strips out SEO spam and synthesizes data using Retrieval-Augmented Generation (RAG) techniques.
 
-## Getting Started
+The platform operates entirely within a Dockerized environment, ensuring reproducibility and ease of deployment. All processing occurs locally on the user's machine, eliminating concerns about data privacy or third-party analytics.
 
-### Prerequisites
+## Key Features
 
-- Docker and docker-compose installed
+- **Privacy-Focused**: No external data transmission; all processing happens locally
+- **AI-Augmented Search**: Leverages local LLMs for intelligent information synthesis
+- **Metasearch Integration**: Utilizes SearXNG to aggregate results from multiple sources
+- **RAG Pipeline**: Implements Retrieval-Augmented Generation for enhanced accuracy
+- **Spam-Free Results**: Actively filters out SEO spam and irrelevant content
 
-### Running the Application
+## Tech Stack
 
-1. Clone this repository
-2. Run `docker-compose up` to start both FastAPI app and SearXNG
-3. Access the API at `http://localhost:8000`
+- **Backend**: Python, FastAPI
+- **Containerization**: Docker, docker-compose
+- **Search Engine**: SearXNG (metasearch)
+- **Frontend**: Vanilla JavaScript
+- **Local LLM Integration**: LM Studio
+- **Deployment**: Dockerized microservices architecture
 
-### Available Endpoints
-
-- `GET /` - Welcome message
-- `GET /search/{query}` - Search with full results
-- `GET /search/simple/{query}` - Search with simplified results (title and URL only)
-
-## API Usage Examples
+## Architecture
 
