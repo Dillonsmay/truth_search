@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRUTH_SEARCH</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #00ff88, #00aaff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 3rem;
+            letter-spacing: 1px;
+        }
+
+        .search-container {
+            margin-bottom: 3rem;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 1.5rem;
+            font-size: 1.2rem;
+            background-color: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+            transition: border-color 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        #search-input:focus {
+            border-color: #00ff88;
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .feature-box {
+            background-color: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.2rem;
+            min-width: 150px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover {
+            border-color: #00ff88;
+            transform: translateY(-3px);
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #00ff88;
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .results-container {
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .result-item {
+            background-color: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            border-color: #00ff88;
+            transform: translateY(-2px);
+        }
+
+        .result-title {
+            font-size: 1.2rem;
+            color: #00ff88;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+        }
+
+        .result-title:hover {
+            text-decoration: underline;
+        }
+
+        .result-url {
+            font-size: 0.9rem;
+            color: #aaa;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>TRUTH_SEARCH</h1>
+        <p class="subtitle">Your gateway to verified information</p>
+        
+        <div class="search-container">
+            <form id="search-form">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    name="query" 
+                    placeholder="Enter your search query..."
+                    autocomplete="off"
+                >
+            </form>
+        </div>
+
+        <div class="features">
+            <div class="feature-box">
+                <div class="feature-title">AI-POWERED</div>
+                <div class="feature-desc">Intelligent search algorithms</div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-title">UNFILTERED</div>
+                <div class="feature-desc">Direct access to information</div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-title">VERIFIED</div>
+                <div class="feature-desc">Trusted sources only</div>
+            </div>
+        </div>
+
+        <div id="results-container" class="results-container"></div>
+    </div>
+
+    <script>
+        // Typing animation for placeholder
+        const searchInput = document.getElementById('search-input');
+        const suggestions = [
+            "Enter your search query...",
+            "Search for anything...",
+            "Discover the truth...",
+            "Find verified information..."
+        ];
+        
+        let currentSuggestionIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        
+        function typePlaceholder() {
+            const currentText = suggestions[currentSuggestionIndex];
+            
+            if (!isDeleting) {
+                // Typing forward
+                searchInput.placeholder = currentText.substring(0, charIndex + 1);
+                charIndex++;
+                
+                if (charIndex === currentText.length) {
+                    isDeleting = true;
+                    setTimeout(typePlaceholder, 2000); // Wait before deleting
+                    return;
+                }
+            } else {
+                // Deleting backward
+                searchInput.placeholder = currentText.substring(0, charIndex - 1);
+                charIndex--;
+                
+                if (charIndex === 0) {
+                    isDeleting = false;
+                    currentSuggestionIndex = (currentSuggestionIndex + 1) % suggestions.length;
+                }
+            }
+            
+            setTimeout(typePlaceholder, isDeleting ? 50 : 100);
+        }
+        
+        // Start typing animation when page loads
+        window.addEventListener('load', () => {
+            typePlaceholder();
+        });
+        
+        // Stop animation on user interaction
+        searchInput.addEventListener('focus', () => {
+            if (searchInput.placeholder !== "Enter your search query...") {
+                searchInput.placeholder = "Enter your search query...";
+            }
+        });
+        
+        searchInput.addEventListener('input', () => {
+            if (searchInput.placeholder !== "Enter your search query...") {
+                searchInput.placeholder = "Enter your search query...";
+            }
+        });
+        
+        // Handle form submission
+        document.getElementById('search-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const query = searchInput.value.trim();
+            if (!query) return;
+            
+            try {
+                // Show loading state
+                const resultsContainer = document.getElementById('results-container');
+                resultsContainer.innerHTML = '<p style="color: #aaa;">Searching...</p>';
+                
+                const response = await fetch(`/search/simple/${encodeURIComponent(query)}`);
+                const data = await response.json();
+                
+                if (data.results && data.results.length > 0) {
+                    let html = '';
+                    data.results.forEach(result => {
+                        if (result.title && result.url) {
+                            html += `
+                                <div class="result-item">
+                                    <a href="${result.url}" target="_blank" class="result-title">${result.title}</a>
+                                    <p class="result-url">${result.url}</p>
+                                </div>
+                            `;
+                        }
+                    });
+                    resultsContainer.innerHTML = html;
+                } else {
+                    resultsContainer.innerHTML = '<p style="color: #aaa;">No results found</p>';
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                document.getElementById('results-container').innerHTML = 
+                    `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

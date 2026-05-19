@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
+from fastapi.responses import HTMLResponse
 import httpx
 from typing import List, Dict, Any
 
@@ -7,9 +8,14 @@ app = FastAPI(title="Search API", description="FastAPI app with SearXNG integrat
 # SearXNG API endpoint
 SEARXNG_URL = "http://searxng:8080"
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 async def read_root():
-    return {"message": "Welcome to the Search API"}
+    # Read the HTML file content
+    try:
+        with open("app/index.html", "r") as f:
+            return Response(content=f.read(), media_type="text/html")
+    except FileNotFoundError:
+        raise HTTPException(status_code=500, detail="Index page not found")
 
 @app.get("/search/{query}")
 async def search(query: str, limit: int = 10):
