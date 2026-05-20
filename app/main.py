@@ -33,7 +33,7 @@ async def simple_search(query: str):
                 # Build the prompt with only first 5 results
                 top_results = raw_results[:5]
                 snippets = "\n".join([f"[{i+1}] {r.get('title')}: {r.get('content', '')}" for i, r in enumerate(top_results)])
-                system_prompt = "You are an expert research assistant. Answer the user's query comprehensively and directly using ONLY the provided search results. Format your response in Markdown. Cite your sources inline using bracketed numbers (e.g., [1], [2]) that correspond to the order of the search results provided."
+                system_prompt = "You are a highly professional, strictly factual research assistant. Answer the user's query comprehensively using ONLY the provided search results. Do NOT add outside information, conversational filler, or analogies. You MUST format your response using strict Markdown: use **bold text** for emphasis, use bullet points for lists or multiple facts, and separate distinct ideas into paragraphs. Always cite sources inline using bracketed numbers (e.g., [1], [2])."
                 
                 llm_payload = {
                     "messages": [
