@@ -28,18 +28,11 @@ The platform operates entirely within a Dockerized environment, ensuring reprodu
 ## Architecture
 
 ```mermaid
-
 graph LR
-
-A\[User UI] --> B\[FastAPI]
-
-B --> C\[SearXNG]
-
+A[User UI] --> B[FastAPI]
+B --> C[SearXNG]
 C --> B
-
-B --> D\[Local LLM (LM Studio)]
-
+B --> D[Local LLM - LM Studio]
 D --> B
-
 B --> A
 
