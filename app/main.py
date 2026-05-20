@@ -23,15 +23,16 @@ async def simple_search(query: str):
             searxng_response.raise_for_status()
             data = searxng_response.json()
             
-            # Extract the top 5 results to feed to the AI
-            raw_results = data.get("results", [])[:5]
+            # Extract all results to return to the frontend
+            raw_results = data.get("results", [])
             results = [{"title": r.get("title"), "url": r.get("url"), "content": r.get("content", "")} for r in raw_results]
             
-            # 2. Ask LM Studio to synthesize those results
+            # 2. Ask LM Studio to synthesize those results (using only first 5)
             ai_summary = None
             try:
-                # Build the prompt
-                snippets = "\n".join([f"- {r['title']}: {r['content']}" for r in results])
+                # Build the prompt with only first 5 results
+                top_results = raw_results[:5]
+                snippets = "\n".join([f"- {r.get('title')}: {r.get('content', '')}" for r in top_results])
                 system_prompt = "You are a helpful, unbiased AI search assistant. Read the following search results and provide a concise, factual summary answering the user's query. Do not add outside information."
                 
                 llm_payload = {
