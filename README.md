@@ -4,9 +4,7 @@ A privacy-respecting, AI-augmented metasearch engine that delivers verified info
 
 ## Overview
 
-TRUTH\_SEARCH is a sophisticated search platform designed to provide users with accurate, locally-processed information while maintaining strict privacy standards. Built upon a robust architecture that integrates SearXNG for powerful metasearching capabilities and local LLM integration via LM Studio, this system strips out SEO spam and synthesizes data using Retrieval-Augmented Generation (RAG) techniques.
-
-The platform operates entirely within a Dockerized environment, ensuring reproducibility and ease of deployment. All processing occurs locally on the user's machine, eliminating concerns about data privacy or third-party analytics.
+TRUTH_SEARCH functions as a locally-hosted, Perplexity-style Answer Engine. Built on a robust architecture that integrates SearXNG for metasearch capabilities and a local LLM via LM Studio, the platform prioritizes direct AI synthesis. The UI prominently displays a Markdown-formatted AI response at the top to provide a clear, structured answer, while raw search results are cleanly relegated to a 'SOURCES' section at the bottom.
 
 ## Key Features
 
