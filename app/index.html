@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TRUTH_SEARCH</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -66,24 +67,46 @@
             box-shadow: 0 0 0 2px rgba(0, 229, 255, 0.2);
         }
 
-        .results-container {
-            width: 100%;
-            margin-top: 2rem;
-        }
-
-        .ai-synthesis {
+        .answer-container {
             background-color: #121212;
             border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
             text-align: left;
             box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
             border-left: 4px solid #00E5FF;
+            width: 100%;
         }
 
-        .ai-synthesis h2 {
+        .answer-container h2 {
             color: #00E5FF;
             margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+
+        .answer-content {
+            line-height: 1.6;
+        }
+
+        .answer-content p, 
+        .answer-content ul, 
+        .answer-content li,
+        .answer-content strong {
+            color: #FFFFFF;
+        }
+
+        .sources-container {
+            width: 100%;
+        }
+
+        .sources-header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .sources-header h2 {
+            color: #00E5FF;
             font-size: 1.4rem;
         }
 
@@ -137,7 +160,7 @@
             </form>
         </div>
 
-        <div id="results-container" class="results-container"></div>
+        <div id="results-container"></div>
     </div>
 
     <script>
@@ -145,7 +168,7 @@
         const searchInput = document.getElementById('search-input');
         const suggestions = [
             "Enter your search query...",
-            "Search for anything...",
+            "Ask anything...",
             "Discover the truth...",
             "Find verified information..."
         ];
@@ -217,26 +240,35 @@
                 if (data.results && data.results.length > 0) {
                     let html = '';
                     
-                    // Add AI synthesis if available
+                    // Add AI answer
                     if (data.ai_summary) {
+                        const parsedAnswer = marked.parse(data.ai_summary);
                         html += `
-                            <div class="ai-synthesis">
-                                <h2>AI_SYNTHESIS</h2>
-                                <p>${data.ai_summary}</p>
+                            <div class="answer-container">
+                                <h2>ANSWER</h2>
+                                <div class="answer-content">${parsedAnswer}</div>
                             </div>
                         `;
                     }
                     
-                    data.results.forEach(result => {
-                        if (result.title && result.url) {
-                            html += `
-                                <div class="result-item">
-                                    <a href="${result.url}" target="_blank" class="result-title">${result.title}</a>
-                                    <p class="result-url">${result.url}</p>
-                                </div>
-                            `;
-                        }
-                    });
+                    // Add sources section
+                    if (data.results.length > 0) {
+                        html += '<div class="sources-container"><div class="sources-header"><h2>SOURCES</h2></div>';
+                        
+                        data.results.forEach(result => {
+                            if (result.title && result.url) {
+                                html += `
+                                    <div class="result-item">
+                                        <a href="${result.url}" target="_blank" class="result-title">${result.title}</a>
+                                        <p class="result-url">${result.url}</p>
+                                    </div>
+                                `;
+                            }
+                        });
+                        
+                        html += '</div>';
+                    }
+                    
                     resultsContainer.innerHTML = html;
                 } else {
                     resultsContainer.innerHTML = '<p style="color: #FFFFFF;">No results found</p>';
