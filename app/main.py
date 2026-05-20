@@ -1,2 +1,60 @@
-from fastapi import FastAPI, HTTPException, Response
-from fast 
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import HTMLResponse
+import httpx
+import os
+
+app = FastAPI()
+
+@app.get("/", response_class=HTMLResponse)
+async def read_root():
+    with open("app/index.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+@app.get("/search/simple/{query}")
+async def simple_search(query: str):
+    try:
+        # 1. Ask SearXNG for the raw search results
+        async with httpx.AsyncClient() as client:
+            searxng_response = await client.get(
+                "http://searxng:8080/search",
+                params={"q": query, "format": "json"},
+                headers={"X-Forwarded-For": "127.0.0.1"}
+            )
+            searxng_response.raise_for_status()
+            data = searxng_response.json()
+            
+            # Extract the top 5 results to feed to the AI
+            raw_results = data.get("results", [])[:5]
+            results = [{"title": r.get("title"), "url": r.get("url"), "content": r.get("content", "")} for r in raw_results]
+            
+            # 2. Ask LM Studio to synthesize those results
+            ai_summary = None
+            try:
+                # Build the prompt
+                snippets = "\n".join([f"- {r['title']}: {r['content']}" for r in results])
+                system_prompt = "You are a helpful, unbiased AI search assistant. Read the following search results and provide a concise, factual summary answering the user's query. Do not add outside information."
+                
+                llm_payload = {
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": f"Query: {query}\n\nSearch Results:\n{snippets}"}
+                    ],
+                    "temperature": 0.3
+                }
+                
+                # Ping LM Studio with a 120-second timeout so it doesn't drop the connection
+                llm_response = await client.post(
+                    "http://host.docker.internal:1234/v1/chat/completions",
+                    json=llm_payload,
+                    timeout=120.0  
+                )
+                llm_response.raise_for_status()
+                ai_summary = llm_response.json()["choices"][0]["message"]["content"]
+                
+            except Exception as e:
+                print(f"Error calling LLM: {e}")
+            
+            return {"query": query, "results": results, "ai_summary": ai_summary}
+            
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error during search: {e}")
