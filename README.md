@@ -14,6 +14,10 @@ TRUTH_SEARCH functions as a locally-hosted, Perplexity-style Answer Engine. Buil
 * **RAG Pipeline**: Implements Retrieval-Augmented Generation for enhanced accuracy
 * **Spam-Free Results**: Actively filters out SEO spam and irrelevant content
 
+## Privacy & The Filter Bubble
+
+Unlike traditional search engines that track user history to deliver algorithmically personalized (and often ideologically skewed) results, TRUTH_SEARCH acts as an anonymous proxy. By utilizing SearXNG to strip away identifying metadata, cookies, and search history, the platform bypasses the 'Filter Bubble.' This ensures users receive a baseline, unmanipulated index of the web, protecting both their data privacy and the objectivity of their search results.
+
 ## Tech Stack
 
 * **Backend**: Python, FastAPI
