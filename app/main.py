@@ -32,8 +32,8 @@ async def simple_search(query: str):
             try:
                 # Build the prompt with only first 5 results
                 top_results = raw_results[:5]
-                snippets = "\n".join([f"- {r.get('title')}: {r.get('content', '')}" for r in top_results])
-                system_prompt = "You are a helpful, unbiased AI search assistant. Read the following search results and provide a concise, factual summary answering the user's query. Do not add outside information."
+                snippets = "\n".join([f"[{i+1}] {r.get('title')}: {r.get('content', '')}" for i, r in enumerate(top_results)])
+                system_prompt = "You are an expert research assistant. Answer the user's query comprehensively and directly using ONLY the provided search results. Format your response in Markdown. Cite your sources inline using bracketed numbers (e.g., [1], [2]) that correspond to the order of the search results provided."
                 
                 llm_payload = {
                     "messages": [
